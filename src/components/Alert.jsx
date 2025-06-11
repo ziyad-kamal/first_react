@@ -3,7 +3,7 @@ export default function Alert({ type, text, show }) {
     return (
         <>
             {show ? (
-                <div className={`${bg} text-lg w-full h-auto p-3 text-center`}>
+                <div className={`${bg} text-white text-lg w-full h-auto p-3 mb-3 text-center`}>
                     {text}
                 </div>
             ) : null}

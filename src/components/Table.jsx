@@ -3,7 +3,7 @@ import Button from "./Button";
 export default function Table({ title, classes, tableHeaders = [], children }) {
     const headersList = tableHeaders.map((header,i) => {
         return (
-            <th key={i} className="text-left py-3 px-0 text-sm font-medium text-gray-900">
+            <th key={i} className="text-left py-3 px-3 text-sm font-medium text-gray-900">
                 {header}
             </th>
         );
@@ -36,9 +36,7 @@ export default function Table({ title, classes, tableHeaders = [], children }) {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
-                            <tr className="hover:bg-gray-50 transition-colors duration-150">
                                 {children}
-                            </tr>
                         </tbody>
                     </table>
                 </div>
