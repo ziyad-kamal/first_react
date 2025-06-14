@@ -1,29 +1,16 @@
-import { Navigate, Route, Routes } from "react-router";
+import { Route, Routes } from "react-router";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-import axios from "axios";
 import AdminLayout from "./layouts/AdminLayout";
-import Admins from "./pages/Admins";
+import { ProtectedRoute } from "./middlewares/ProtectedRoute";
+import { PublicRoute } from "./middlewares/PublicRoute";
+import { setAxiosConfig } from "./functions/setAxiosConfig";
+import GetAdmins from "./pages/admins/GetAdmins";
+import EditAdmins from "./pages/admins/EditAdmins";
+import AddAdmins from "./pages/admins/AddAdmins";
 
 function App() {
-    const token = localStorage.getItem('token');
-    axios.defaults.baseURL = "http://127.0.0.1:8000/api/";
-    axios.defaults.headers.post["Content-Type"] = "application/json";
-    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-
-    const ProtectedRoute = ({ children }) => {
-        const isAuthenticated = localStorage.getItem("token");
-        return isAuthenticated ? children : <Navigate to="/login" replace />;
-    };
-
-    const PublicRoute = ({ children }) => {
-        const isAuthenticated = localStorage.getItem("token");
-        return isAuthenticated ? (
-            <Navigate to="/dashboard" replace />
-        ) : (
-            children
-        );
-    };
+    setAxiosConfig();
 
     return (
         <>
@@ -37,7 +24,7 @@ function App() {
                     }
                 />
 
-                <Route element={<AdminLayout/>}  >
+                <Route element={<AdminLayout />}>
                     <Route
                         path="/dashboard"
                         element={
@@ -47,14 +34,32 @@ function App() {
                         }
                     />
 
-                    <Route
-                        path="/admins"
-                        element={
-                            <ProtectedRoute>
-                                <Admins />
-                            </ProtectedRoute>
-                        }
-                    />
+                    <Route path="/admins">
+                        <Route
+                            index
+                            element={
+                                <ProtectedRoute>
+                                    <GetAdmins />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="add"
+                            element={
+                                <ProtectedRoute>
+                                    <AddAdmins />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="edit/:id"
+                            element={
+                                <ProtectedRoute>
+                                    <EditAdmins />
+                                </ProtectedRoute>
+                            }
+                        />
+                    </Route>
                 </Route>
             </Routes>
         </>

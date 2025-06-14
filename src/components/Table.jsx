@@ -1,6 +1,7 @@
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import Button from "./Button";
 
-export default function Table({ title, classes, tableHeaders = [], children }) {
+export default function Table({ title, classes, tableHeaders = [], children,handleBtnClick}) {
     const headersList = tableHeaders.map((header,i) => {
         return (
             <th key={i} className="text-left py-3 px-3 text-sm font-medium text-gray-900">
@@ -25,6 +26,8 @@ export default function Table({ title, classes, tableHeaders = [], children }) {
                     <Button
                         classes={"bg-indigo-600 hover:bg-indigo-700"}
                         text={`Add`}
+                        icon={faPlus}
+                        handleClick={handleBtnClick}
                     />
                 </div>
 

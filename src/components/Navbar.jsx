@@ -2,9 +2,8 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { Link } from "react-router";
-import Admins from "../pages/Admins";
 
-export default function Navbar() {
+export default function Navbar({classes}) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const handleMenuToggle = () => {
@@ -23,9 +22,9 @@ export default function Navbar() {
     return (
         <>
             <nav
-                className={`navbar z-10 p-1 bg-blue-800 h-16 fixed right-0 
-                    left-0 top-0 flex justify-evenly items-center 
-                    ${isMenuOpen ? "responsive_navbar" : ""}`}
+                className={`navbar z-10 p-1  h-16 fixed right-0 
+                    left-0 top-0 flex justify-evenly items-center ${classes}
+                    ${isMenuOpen ? "flex-col gap-4 h-auto" : ""}`}
                 onClick={handleOutsideClick}
             >
                 <h2 className="text-blue-200 text-4xl  font-extrabold ">
@@ -35,7 +34,7 @@ export default function Navbar() {
                 <div
                     className={`flex gap-8 text-blue-200 text-lg font-bold 
                         links max-md:hidden ${
-                            isMenuOpen ? "responsive_links" : ""
+                            isMenuOpen ? "!flex flex-col" : ""
                         }`}
                 >
                     <Link to={'/admins'} >admins</Link>
@@ -46,7 +45,7 @@ export default function Navbar() {
 
                 <form
                     className={`flex max-md:hidden search_form 
-                    ${isMenuOpen ? "responsive_search_input" : ""}`}
+                    ${isMenuOpen ? "!flex" : ""}`}
                 >
                     <input
                         name="search"

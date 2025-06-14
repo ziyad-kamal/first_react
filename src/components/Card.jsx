@@ -1,4 +1,4 @@
-export default function Card({children,title,classes}) {
+export default function Card({children,title,classes ='bg-blue-900 w-auto'}) {
     return (
         <>
             <div className={`h-auto text-white rounded-md ${classes}`}>
