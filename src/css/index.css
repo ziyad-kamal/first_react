@@ -8,10 +8,6 @@
     -o-transition: all ease-in-out 0.2s;
 }
 
-.bg-semi-trans {
-    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent */
-}
-
 .links {
     cursor: pointer;
     a:hover {
@@ -32,4 +28,43 @@
         padding-block: calc(var(--spacing) * 4);
         padding-inline: calc(var(--spacing) * 3);
     }
+}
+
+/* modal */
+.bg-semi-trans {
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent */
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.8);
+        -webkit-transform: translateY(-20px) scale(0.8);
+        -moz-transform: translateY(-20px) scale(0.8);
+        -ms-transform: translateY(-20px) scale(0.8);
+        -o-transform: translateY(-20px) scale(0.8);
+}
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-overlay {
+    animation: fadeIn 0.2s ease-out;
+    -webkit-animation: fadeIn 0.2s ease-out;
+}
+
+.modal-content {
+    animation: slideIn 0.2s ease-out;
+    -webkit-animation: slideIn 0.2s ease-out;
 }

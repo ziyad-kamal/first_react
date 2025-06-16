@@ -1,17 +1,10 @@
-import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useContext, useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router";
 import { AlertContext } from "../../contexts/AlertContext";
 import Card from "../../components/Card";
 import LabelInput from "../../components/LabelInput";
 import Button from "../../components/Button";
-import getData from "../../functions/getData";
 import sendRequest from "../../functions/sendRequest";
-
-const initialInputs = {
-    name: "",
-    password: "",
-    email: "",
-};
 
 const initialErrors = {
     name: [],
@@ -21,9 +14,17 @@ const initialErrors = {
 
 export default function EditAdmins() {
     const { handleMessageState } = useContext(AlertContext);
-    const [inputs, setInputs] = useState(initialInputs);
     const [errors, setErrors] = useState(initialErrors);
+    const navigate = useNavigate();
     const { id } = useParams();
+
+    // Refs for uncontrolled inputs
+    const nameRef = useRef();
+    const emailRef = useRef();
+    const passwordRef = useRef();
+
+    // Ref for abort controller in submit
+    const abortControllerForSubmit = useRef(null);
 
     // MARK: get admins
     useEffect(() => {
@@ -31,9 +32,16 @@ export default function EditAdmins() {
         const abortController = new AbortController();
 
         const fetchData = async () => {
-            const response = await getData(url, abortController);
+            const response = await sendRequest(
+                "get",
+                url,
+                "",
+                abortController,
+                navigate
+            );
             if (response && response.success) {
-                setInputs({ ...inputs, ...response.data.admin });
+                nameRef.current.value = response.data.admin.name;
+                emailRef.current.value = response.data.admin.email;
             } else if (response) {
                 handleMessageState(response.msg);
             }
@@ -45,26 +53,29 @@ export default function EditAdmins() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const handleChange = (value, name) => {
-        setInputs({ ...inputs, [name]: value });
-    };
-
-    let abortControllerForSubmit = null;
-
     // MARK: handleSubmit
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         const url = `/admins/update/${id}?_method=put`;
-        abortControllerForSubmit ? abortControllerForSubmit.abort() : null;
-        abortControllerForSubmit = new AbortController();
+        if (abortControllerForSubmit.current) {
+            abortControllerForSubmit.current.abort();
+        }
+        abortControllerForSubmit.current = new AbortController();
+
+        const inputs = {
+            name: nameRef.current?.value || "",
+            email: emailRef.current?.value || "",
+            password: passwordRef.current?.value || "",
+        };
 
         const submitData = async () => {
             const response = await sendRequest(
+                "post",
                 url,
                 inputs,
-                abortControllerForSubmit,
-                'post'
+                abortControllerForSubmit.current,
+                navigate
             );
             setErrors(initialErrors);
 
@@ -94,28 +105,25 @@ export default function EditAdmins() {
                     <form onSubmit={handleSubmit}>
                         <LabelInput
                             isRequired={false}
-                            value={inputs.name}
                             name="name"
                             type="text"
-                            handleChange={handleChange}
+                            inputRef={nameRef}
                             error={errors.name[0]}
                         />
 
                         <LabelInput
                             isRequired={true}
-                            value={inputs.email}
                             name="email"
                             type="email"
-                            handleChange={handleChange}
+                            inputRef={emailRef}
                             error={errors.email[0]}
                         />
 
                         <LabelInput
-                            value={inputs.password}
                             isRequired={false}
                             name="password"
                             type="password"
-                            handleChange={handleChange}
+                            inputRef={passwordRef}
                             error={errors.password[0]}
                         />
 

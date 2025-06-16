@@ -1,19 +1,22 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Button from "../components/Button";
 import Card from "../components/Card";
 import LabelInput from "../components/LabelInput";
-import Alert from "../components/Alert";
 import { useNavigate } from "react-router";
-import axios from "axios";
+import sendRequest from "../functions/sendRequest";
+import { AlertContext } from "../contexts/AlertContext";
+import { useTranslation } from "react-i18next";
 
 export default function Login() {
     const navigate = useNavigate();
     const [inputs, setInputs] = useState({ email: "", password: "" });
-    const [message, setMessage] = useState({
-        show: false,
-        type: "",
-        text: "",
-    });
+    const { handleMessageState } = useContext(AlertContext);
+    const { t, i18n } = useTranslation();
+
+    const handleLang = () => {
+        i18n.changeLanguage("ar");
+        document.querySelector('html').dir='rtl'
+    };
 
     const handleChange = (value, name) => {
         setInputs({ ...inputs, [name]: value });
@@ -21,45 +24,40 @@ export default function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const response = await axios.post("admins/login", inputs);
-            if (response.status === 200) {
-                localStorage.setItem("token", response.data.token);
+        const url = "/admins/login";
+        const abortController = new AbortController();
 
+        const login = async () => {
+            const response = await sendRequest(
+                "post",
+                url,
+                inputs,
+                abortController
+            );
+
+            if (response && response.success) {
+                localStorage.setItem("token", response.data.token);
                 navigate("/dashboard");
+            } else if (response) {
+                handleMessageState(response.msg);
             }
-        } catch (error) {
-            if (error.response) {
-                setMessage({
-                    show: true,
-                    type: "danger",
-                    text: "incorrect email or password",
-                });
-            } else if (error.request) {
-                setMessage({
-                    show: true,
-                    type: "danger",
-                    text: "no response received,try again later.",
-                });
-            } else {
-                setMessage({
-                    show: true,
-                    type: "danger",
-                    text: "something went wrong",
-                });
-            }
-        }
+        };
+
+        login();
     };
 
     return (
         <>
-            <Alert
-                type={message.type}
-                text={message.text}
-                show={message.show}
+            <Button
+                classes={"bg-green-700  hover:bg-green-800"}
+                text={"lang"}
+                handleClick={handleLang}
             />
             <div className="flex justify-center items-center h-100 mt-7">
-                <Card classes={"bg-blue-900 w-100"} title={"Login"}>
+                <Card
+                    classes={"bg-blue-900 w-100"}
+                    title={t("login")}
+                >
                     <form onSubmit={handleSubmit}>
                         <LabelInput
                             isRequired={true}

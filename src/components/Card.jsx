@@ -1,4 +1,7 @@
-export default function Card({children,title,classes ='bg-blue-900 w-auto'}) {
+import { memo } from "react";
+
+function Card({children,title,classes ='bg-blue-900 w-auto'}) {
+    console.log('card')
     return (
         <>
             <div className={`h-auto text-white rounded-md ${classes}`}>
@@ -12,3 +15,4 @@ export default function Card({children,title,classes ='bg-blue-900 w-auto'}) {
         </>
     );
 }
+export default memo(Card);

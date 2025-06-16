@@ -5,9 +5,8 @@ export default function LabelInput({
     placeholder = "",
     label = "",
     isRequired,
-    value,
-    handleChange,
-    error=''
+    inputRef,
+    error = ''
 }) {
     return (
         <>
@@ -29,12 +28,9 @@ export default function LabelInput({
                 required={isRequired}
                 id={name}
                 autoComplete="true"
-                value={value}
-                onChange={(e) => {
-                    handleChange(e.target.value, name);
-                }}
+                ref={inputRef}
             />
-            {error != [] ? <p className="text-red-500 font-bold mb-1">{error}</p> : null}
+            {error ? <p className="text-red-500 font-bold mb-1">{error}</p> : null}
         </>
     );
 }

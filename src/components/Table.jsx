@@ -1,10 +1,19 @@
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import Button from "./Button";
 
-export default function Table({ title, classes, tableHeaders = [], children,handleBtnClick}) {
-    const headersList = tableHeaders.map((header,i) => {
+export default function Table({
+    title,
+    classes = "bg-white",
+    tableHeaders = [],
+    children,
+    handleBtnClick,
+}) {
+    const headersList = tableHeaders.map((header, i) => {
         return (
-            <th key={i} className="text-left py-3 px-3 text-sm font-medium text-gray-900">
+            <th
+                key={i}
+                className="text-left py-3 px-3 text-sm font-medium text-gray-900"
+            >
                 {header}
             </th>
         );
@@ -39,7 +48,7 @@ export default function Table({ title, classes, tableHeaders = [], children,hand
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
-                                {children}
+                            {children}
                         </tbody>
                     </table>
                 </div>

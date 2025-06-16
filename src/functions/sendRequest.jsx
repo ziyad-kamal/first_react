@@ -1,7 +1,16 @@
 import axios from "axios";
 
-export default function sendRequest(url, inputs, abortController, type) {
-    const post = async () => {
+export default function sendRequest(
+    type,
+    url,
+    inputs,
+    abortController,
+    navigate = () => {}
+) {
+    const send = async () => {
+        const token = localStorage.getItem("token");
+        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
         try {
             let response;
             if (type == "get") {
@@ -16,6 +25,11 @@ export default function sendRequest(url, inputs, abortController, type) {
                 response = await axios.delete(url, {
                     signal: abortController.signal,
                 });
+            }
+
+            let refreshToken = response.headers["refresh_token"];
+            if (refreshToken) {
+                localStorage.setItem("token", refreshToken);
             }
 
             if (response.status === 200) {
@@ -41,14 +55,22 @@ export default function sendRequest(url, inputs, abortController, type) {
             }
         } catch (error) {
             if (error.response) {
+                let refreshToken = error.response.headers["refresh_token"];
+                if (refreshToken) {
+                    localStorage.setItem("token", refreshToken);
+                }
+
                 const status = error.response.status;
-                if (status === 404) {
+                if (status === 401) {
+                    localStorage.removeItem("token");
+                    navigate("/login");
+                } else if (status === 404) {
                     return {
                         success: false,
                         msg: {
                             show: true,
                             type: "danger",
-                            text: "not found",
+                            text: error.response.data.message,
                         },
                     };
                 } else if (status === 422) {
@@ -104,5 +126,5 @@ export default function sendRequest(url, inputs, abortController, type) {
         }
     };
 
-    return post();
+    return send();
 }

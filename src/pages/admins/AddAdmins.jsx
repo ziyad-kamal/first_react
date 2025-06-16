@@ -4,6 +4,7 @@ import Card from "../../components/Card";
 import LabelInput from "../../components/LabelInput";
 import Button from "../../components/Button";
 import sendRequest from "../../functions/sendRequest";
+import { useNavigate } from "react-router";
 
 const initialInputs = {
     name: "",
@@ -21,6 +22,7 @@ export default function AddAdmins() {
     const { handleMessageState } = useContext(AlertContext);
     const [inputs, setInputs] = useState(initialInputs);
     const [errors, setErrors] = useState(initialErrors);
+    const navigate = useNavigate();
 
     const handleChange = (value, name) => {
         setInputs({ ...inputs, [name]: value });
@@ -37,10 +39,11 @@ export default function AddAdmins() {
 
         const submitData = async () => {
             const response = await sendRequest(
+                'post',
                 url,
                 inputs,
                 abortControllerForSubmit,
-                'post'
+                navigate
             );
             setErrors(initialErrors);
 

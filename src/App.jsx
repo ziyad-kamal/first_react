@@ -4,10 +4,12 @@ import Dashboard from "./pages/Dashboard";
 import AdminLayout from "./layouts/AdminLayout";
 import { ProtectedRoute } from "./middlewares/ProtectedRoute";
 import { PublicRoute } from "./middlewares/PublicRoute";
-import { setAxiosConfig } from "./functions/setAxiosConfig";
 import GetAdmins from "./pages/admins/GetAdmins";
 import EditAdmins from "./pages/admins/EditAdmins";
 import AddAdmins from "./pages/admins/AddAdmins";
+import { setAxiosConfig } from "./functions/setAxiosConfig";
+import AlertContextProvider from "./providers/AlertContextProvider";
+import { Suspense } from "react";
 
 function App() {
     setAxiosConfig();
@@ -19,7 +21,11 @@ function App() {
                     path="/login"
                     element={
                         <PublicRoute>
-                            <Login />
+                            <Suspense fallback={'loading'} >
+                                <AlertContextProvider>
+                                    <Login />
+                                </AlertContextProvider>
+                            </Suspense>
                         </PublicRoute>
                     }
                 />

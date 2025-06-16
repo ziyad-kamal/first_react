@@ -5,12 +5,14 @@ export default function Modal({
     content,
     open,
     handleClick,
+    handleClose,
     btnText,
-    btnClasses ,
+    btnClasses,
     btnType,
 }) {
     return (
         <div
+            onClick={handleClose}
             id="modalOverlay"
             className={`${
                 open ? "flex" : "hidden"
@@ -23,6 +25,7 @@ export default function Modal({
                 <div className="flex items-center justify-between p-6 border-b border-gray-200">
                     <h2 className="text-xl font-bold text-gray-900">{title}</h2>
                     <button
+                        onClick={handleClose}
                         id="closeModal"
                         className="text-gray-400 hover:text-gray-600 transition-colors duration-200 p-1 rounded-full hover:bg-gray-100"
                     >
@@ -47,6 +50,7 @@ export default function Modal({
                         text={"cancel"}
                         type="button"
                         classes="bg-gray-400 hover:bg-gray-500"
+                        handleClick={handleClose}
                     />
                     <Button
                         text={btnText}

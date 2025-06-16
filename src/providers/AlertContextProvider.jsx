@@ -1,16 +1,21 @@
-import {useState } from "react";
+import { useState } from "react";
 import Alert from "../components/Alert";
 import { AlertContext } from "../contexts/AlertContext";
 
+const initialState = {
+    show: false,
+    type: "",
+    text: "",
+};
+
 export default function AlertContextProvider({ children }) {
-    const [message, setMessage] = useState({
-        show: false,
-        type: "",
-        text: "",
-    });
+    const [message, setMessage] = useState(initialState);
 
     const handleMessageState = (newMessage) => {
         setMessage(newMessage);
+        setTimeout(() => {
+            setMessage(initialState);
+        }, 4000);
     };
 
     return (
@@ -26,4 +31,3 @@ export default function AlertContextProvider({ children }) {
         </>
     );
 }
-

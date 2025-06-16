@@ -25,7 +25,7 @@ export default function GetAdmins() {
         const abortController = new AbortController();
 
         const fetchData = async () => {
-            const response = await sendRequest(url, "", abortController, "get");
+            const response = await sendRequest("get", url, "", abortController,navigate);
             if (response && response.success) {
                 setAdmins(response.data.data);
             } else if (response) {
@@ -50,14 +50,13 @@ export default function GetAdmins() {
     const handleConfirm = (id) => {
         const url = `/admins/delete/${id}`;
         const abortController = new AbortController();
-        console.log("abortController: ", abortController);
 
         const deleteData = async () => {
             const response = await sendRequest(
+                "delete",
                 url,
                 "",
-                abortController,
-                "delete"
+                abortController
             );
             if (response && response.success) {
                 let newAdmins = admins.filter((admin) => {
