@@ -1,4 +1,3 @@
-import { memo } from "react";
 
 function Card({children,title,classes ='bg-blue-900 w-auto'}) {
     console.log('card')
@@ -15,4 +14,4 @@ function Card({children,title,classes ='bg-blue-900 w-auto'}) {
         </>
     );
 }
-export default memo(Card);
+export default Card;

@@ -6,8 +6,13 @@ import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router";
 import { ModalContext } from "../../contexts/ModalContext";
 import sendRequest from "../../functions/sendRequest";
+import { useDispatch, useSelector } from "react-redux";
+import { incrementByAmount } from "../../features/Counter";
+import { asyncTest } from "../../features/AsyncTest";
 
 export default function GetAdmins() {
+    const count = useSelector((state) => state.counter.value);
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const { handleMessageState } = useContext(AlertContext);
     const { handleModalState } = useContext(ModalContext);
@@ -24,8 +29,16 @@ export default function GetAdmins() {
         const url = "/admins/get";
         const abortController = new AbortController();
 
+        dispatch(asyncTest())
+
         const fetchData = async () => {
-            const response = await sendRequest("get", url, "", abortController,navigate);
+            const response = await sendRequest(
+                "get",
+                url,
+                "",
+                abortController,
+                navigate
+            );
             if (response && response.success) {
                 setAdmins(response.data.data);
             } else if (response) {
@@ -50,6 +63,8 @@ export default function GetAdmins() {
     const handleConfirm = (id) => {
         const url = `/admins/delete/${id}`;
         const abortController = new AbortController();
+
+        dispatch(incrementByAmount({test:5}))
 
         const deleteData = async () => {
             const response = await sendRequest(
@@ -118,6 +133,7 @@ export default function GetAdmins() {
 
     return (
         <>
+        <h3>{count}</h3>
             <Table
                 title={"admins"}
                 classes={"bg-white"}

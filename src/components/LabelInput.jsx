@@ -5,6 +5,7 @@ export default function LabelInput({
     placeholder = "",
     label = "",
     isRequired,
+    handleChange,
     inputRef,
     error = ''
 }) {
@@ -29,6 +30,7 @@ export default function LabelInput({
                 id={name}
                 autoComplete="true"
                 ref={inputRef}
+                onChange={(e)=>handleChange(e.target.value,name)} 
             />
             {error ? <p className="text-red-500 font-bold mb-1">{error}</p> : null}
         </>

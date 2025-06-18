@@ -21,11 +21,9 @@ function App() {
                     path="/login"
                     element={
                         <PublicRoute>
-                            <Suspense fallback={'loading'} >
                                 <AlertContextProvider>
                                     <Login />
                                 </AlertContextProvider>
-                            </Suspense>
                         </PublicRoute>
                     }
                 />
